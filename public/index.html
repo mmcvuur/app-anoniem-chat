@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Anoniem CHAT</title>
+
+  <meta name="title" content="Anoniem CHAT" />
+  <meta name="description" content="Completely nameless chat: no sign-ups, no traces." />
+  <meta name="keywords" content="Anoniem, Anonymous, Chat" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="color-scheme" content="dark light" />
+
+  <link rel="manifest" href="/manifest.webmanifest">
+
+  <link rel="icon" href="/icons/favicon.ico" />
+
+  <meta name="format-detection" content="telephone=no" />
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Anoniem CHAT">
+
+  <link rel="stylesheet" href="/css/style-font-awesome-all.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/style-emoji.css" />
+  <link rel="stylesheet" href="/css/style-tooltip.css" />
+</head>
+
+<body>
+  <noscript>
+    <p>JavaScript is required to use this chat.</p>
+  </noscript>
+
+  <div id="join-screen">
+    <div class="join-container">
+      <div class="logo">
+        <img src="/images/logo.png" alt="Anoniem CHAT Logo">
+      </div>
+
+      <p class="tag">
+        Truly anonymous, intentionally ephemeral encrypted messaging.
+      </p>
+
+      <form id="joinForm">
+        <input type="text" id="join-username" placeholder="Username" maxlength="15" required autocomplete="off">
+        <div class="key-input-wrap">
+          <input type="password" id="join-key" placeholder="Room Key" required autocomplete="off">
+          <button type="button" id="toggleKey" title="Show/Hide Key"><i class="fa-solid fa-eye"></i></button>
+        </div>
+
+        <p class="disclaimer">
+          By joining, you agree to use this platform respectfully and are 18+. anoniem.chat is for casual use and is not responsible for user content.
+        </p>
+
+        <div class="join-buttons">
+          <button type="submit" id="joinBtn">Agree & Join Room</button>
+          <button type="button" id="genKeyBtn">Generate Key</button>
+        </div>
+        <p id="join-error" class="error-text"></p>
+      </form>
+
+      <div class="footer">
+        Made by mmcvuur<br>
+        hello -at- anoniem *dot* chat
+      </div>
+    </div>
+  </div>
+
+  <div id="topbar">
+    <p id="top-text"></p>
+  </div>
+
+  <div class="tooltip" role="region" aria-label="About this app">
+    <button id="tooltip-btn" aria-controls="tooltip-panel" aria-expanded="false" title="About">
+      <i class="fa-regular fa-lg fa-circle-question"></i>
+    </button>
+  </div>
+
+  <ul id="messages" aria-live="polite" aria-relevant="additions" aria-label="Chat messages"></ul>
+
+  <form id="chatForm" action="" autocomplete="off">
+    <input id="m" maxlength="1024" autofocus type="text" inputmode="text" enterkeyhint="send" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="What's on your mind?" />
+    <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+
+    <div class="emoji-wrap">
+      <button type="button" id="emojiToggle" class="emoji-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="emojiPanel" title="Pick emoji">😊</button>
+      <div id="emojiPanel" class="emoji-panel" role="menu" aria-label="Emoji picker" hidden>
+        <button type="button" class="emoji-item" role="menuitem">🙂</button>
+        <button type="button" class="emoji-item" role="menuitem">😂</button>
+        <button type="button" class="emoji-item" role="menuitem">😶</button>
+        <button type="button" class="emoji-item" role="menuitem">🙃</button>
+        <button type="button" class="emoji-item" role="menuitem">🤔</button>
+        <button type="button" class="emoji-item" role="menuitem">🤬</button>
+        <button type="button" class="emoji-item" role="menuitem">🤮</button>
+        <button type="button" class="emoji-item" role="menuitem">👋</button>
+        <button type="button" class="emoji-item" role="menuitem">👍</button>
+        <button type="button" class="emoji-item" role="menuitem">👎</button>
+        <button type="button" class="emoji-item" role="menuitem">👀</button>
+        <button type="button" class="emoji-item" role="menuitem">🔥</button>
+        <button type="button" class="emoji-item" role="menuitem">💯</button>
+        <button type="button" class="emoji-item" role="menuitem">🔐</button>
+        <button type="button" class="emoji-item" role="menuitem">🗯️</button>
+      </div>
+    </div>
+  </form>
+
+  <audio id="notificationSound" src="/sounds/notification.wav" preload="auto"></audio>
+
+  <div id="image-modal" role="dialog" aria-label="Image preview">
+    <img src="" alt="Preview">
+  </div>
+
+  <div id="tooltip-panel" class="tooltip-hide" role="dialog" aria-modal="false" aria-hidden="true" tabindex="-1">
+    <p><img src="/icons/icon-192.png" alt="" /></p>
+    <p>Talk freely in private, end-to-end encrypted rooms. Messages are encrypted in your browser and never readable by the server.</p>
+    <p id="commands">
+    </p>
+    <p id="server-loc">Server located in the EU</p>
+    <div id="settings-area">
+      <label>
+        <input type="checkbox" id="show-raw-toggle" />
+        <span>Show raw encrypted data</span>
+      </label>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.8.3/socket.io.min.js" defer></script>
+  <script src="/js/app.js" defer></script>
+</body>
+</html>

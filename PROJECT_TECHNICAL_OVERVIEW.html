@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anoniem Chat: Technical Project Overview & E2EE Implementation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #16a085;
+        }
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.9em;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+            margin: 30px 0;
+        }
+        .footer {
+            margin-top: 50px;
+            font-style: italic;
+            font-size: 0.9em;
+            color: #777;
+            text-align: right;
+        }
+        @media print {
+            body {
+                background-color: transparent;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Anoniem Chat: Technical Project Overview & E2EE Implementation</h1>
+        
+        <h2>Project Overview</h2>
+        <p>Anoniem Chat is a privacy-focused, anonymous, and ephemeral group messaging platform designed for secure communication with zero data retention. The system is built on a "Privacy by Design" philosophy, ensuring that no user data, chat history, or metadata is persisted on the server.</p>
+
+        <h3>Key Features</h3>
+        <ul>
+            <li><strong>Zero Registration:</strong> No sign-up, email, or phone number required.</li>
+            <li><strong>Ephemeral Messaging:</strong> Chat history exists only in the browser's memory and is cleared upon page reload.</li>
+            <li><strong>Anonymity:</strong> No tracking cookies, analytics, or fingerprinting.</li>
+            <li><strong>End-to-End Encryption (E2EE):</strong> All messages are encrypted in the sender's browser and decrypted only by the intended recipients.</li>
+        </ul>
+
+        <hr>
+
+        <h2>End-to-End Encryption (E2EE) Architecture</h2>
+        <p>The E2EE implementation in Anoniem Chat follows modern cryptographic standards using the Web Crypto API to ensure that the server (and any intermediary) can never read the content of the messages.</p>
+
+        <h3>1. Key Generation</h3>
+        <p>Users can manually enter an encryption key or generate a cryptographically secure random key directly in the browser.</p>
+        <ul>
+            <li><strong>Method:</strong> <code>window.crypto.getRandomValues()</code></li>
+            <li><strong>Key Length:</strong> 32 characters (alphanumeric and special symbols).</li>
+            <li><strong>Security:</strong> The key never leaves the user's browser.</li>
+        </ul>
+
+        <h3>2. Key Derivation (PBKDF2)</h3>
+        <p>The raw key provided by the user is not used directly for encryption. Instead, a strong encryption key is derived using the PBKDF2 (Password-Based Key Derivation Function 2) algorithm.</p>
+        <ul>
+            <li><strong>Algorithm:</strong> PBKDF2</li>
+            <li><strong>Hash Function:</strong> SHA-256</li>
+            <li><strong>Iterations:</strong> 100,000 (standard for protecting against brute-force attacks)</li>
+            <li><strong>Salt:</strong> Derived from the SHA-256 hash of the key itself.</li>
+            <li><strong>Resulting Key:</strong> AES-GCM 256-bit key.</li>
+        </ul>
+
+        <h3>3. Message Encryption (AES-GCM)</h3>
+        <p>Messages are encrypted using the Advanced Encryption Standard (AES) in Galois/Counter Mode (GCM).</p>
+        <ul>
+            <li><strong>Algorithm:</strong> AES-GCM 256</li>
+            <li><strong>Initialization Vector (IV):</strong> A unique, random 12-byte IV is generated for every single message using <code>crypto.getRandomValues()</code>.</li>
+            <li><strong>Authentication:</strong> AES-GCM provides both confidentiality and integrity (authentication), ensuring that messages cannot be tampered with in transit.</li>
+            <li><strong>Payload:</strong> The IV is prepended to the ciphertext and the combined result is Base64 encoded before being sent to the server.</li>
+        </ul>
+
+        <h3>4. Message Decryption</h3>
+        <p>When a client receives an encrypted message:</p>
+        <ol>
+            <li>The Base64 payload is decoded.</li>
+            <li>The 12-byte IV is extracted.</li>
+            <li>The remaining ciphertext is decrypted using the local AES-GCM key and the IV.</li>
+            <li>If decryption fails (e.g., due to a different room key), the message is displayed as <code>[Decryption Failed]</code>.</li>
+        </ol>
+
+        <hr>
+
+        <h2>Server-Side Privacy</h2>
+        <p>The server acts purely as a blind relay for encrypted payloads.</p>
+        <ul>
+            <li><strong>Zero Visibility:</strong> The server receives only the Base64-encoded ciphertext. It has no access to the encryption keys or the plaintext.</li>
+            <li><strong>No Persistence:</strong> Messages are broadcast to active participants in the room via WebSockets and are never written to a database or disk.</li>
+            <li><strong>Logging:</strong> Only high-level events (e.g., user joins, admin actions) are logged; no message content or sensitive identifiers are captured.</li>
+        </ul>
+
+        <h2>Security Standards Compliance</h2>
+        <ul>
+            <li><strong>Web Crypto API:</strong> Utilizes native, high-performance cryptographic primitives provided by the browser.</li>
+            <li><strong>Modern Algorithms:</strong> Employs AES-GCM 256 and PBKDF2-HMAC-SHA256, both of which are currently considered secure and industry-standard.</li>
+            <li><strong>Secure Key Generation:</strong> Uses cryptographically secure PRNGs for all random values (Keys and IVs).</li>
+        </ul>
+
+        <div class="footer">
+            Generated on April 28, 2026
+        </div>
+    </div>
+</body>
+</html>

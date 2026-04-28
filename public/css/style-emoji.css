@@ -1,0 +1,46 @@
+.emoji-wrap { 
+  position: relative; 
+  display: flex; 
+  align-items: center; 
+}
+
+.emoji-toggle {
+  border: none;
+  cursor: pointer;
+}
+
+.emoji-panel[hidden] { 
+  display: none !important; 
+}
+
+.emoji-panel {
+  position: absolute;
+  bottom: 44px;
+  right: 0;
+  background: transparent;
+  padding: 15px;
+  display: grid;
+  grid-template-columns: repeat(5, 28px);
+  gap: 6px;
+  z-index: 999;
+}
+
+.emoji-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.emoji-item:hover { 
+  background: transparent; 
+}
+
+.emoji-item:focus { 
+  outline: none; 
+}

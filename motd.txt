@@ -1,0 +1,13 @@
+STATUS: [green]SECURE[/green] | CIPHER: [green]AES-GCM-256[/green] | PRIVACY: [green]ZERO-LOG POLICY[/green]
+-----------------------------------------------------------------------
+    [yellow]/motd[/yellow]           : Show this message
+    [yellow]/nick[/yellow] <name>    : Change your handle
+    [yellow]/me[/yellow] <action>    : Perform an action
+    [yellow]/id[/yellow]             : Show your username
+    [yellow]/who[/yellow]            : Who is in this room
+    [yellow]/clear[/yellow]          : Clear your chat screen
+    [yellow]/exit[/yellow]           : Leave current session
+-----------------------------------------------------------------------
+[blue]Your Room Key is private. Share it only with those you trust.[/blue]
+[red]Refreshing the page will permanently erase your current history.[/red]
+
