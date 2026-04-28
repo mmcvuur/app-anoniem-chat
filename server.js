@@ -113,7 +113,7 @@ app.use((req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));
 });
 
-const MAX_USERS_PER_ROOM        = 50;
+const MAX_USERS_PER_ROOM        = parseInt(process.env.MAX_USERS_PER_ROOM) || 20;
 const MAX_GLOBAL_USERS          = parseInt(process.env.MAX_GLOBAL_USERS) || 20;
 const MAX_CONNECTIONS_PER_IP    = 3;
 const MAX_MSG_LENGTH            = 2048; // Increased for encrypted payloads
