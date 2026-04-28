@@ -86,7 +86,7 @@ app.get('/admin/rooms', (req, res) => {
   }
 
   logger.info({ event: 'admin_rooms_list', count: Object.keys(rooms).length }, 'Admin rooms list requested');
-  res.json({ ok: true, rooms, maxGlobalUsers: MAX_GLOBAL_USERS });
+  res.json({ ok: true, rooms, maxGlobalUsers: MAX_GLOBAL_USERS, maxUsersPerRoom: MAX_USERS_PER_ROOM });
 });
 
 app.get('/admin/messages', (req, res) => {
