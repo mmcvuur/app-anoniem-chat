@@ -129,6 +129,19 @@
             <li><strong>Logging:</strong> Only high-level events (e.g., user joins, admin actions) are logged; no message content or sensitive identifiers are captured.</li>
         </ul>
 
+        <h2>System Limits & Anti-Spam</h2>
+        <p>To ensure platform stability and prevent abuse, several server-side limits are enforced:</p>
+        <ul>
+            <li><strong>Global Capacity:</strong> Maximum of 20 concurrent users across the entire platform.</li>
+            <li><strong>Room Capacity:</strong> Maximum of 20 concurrent users per chat room.</li>
+            <li><strong>Connection Limit:</strong> Maximum of 3 concurrent WebSocket connections per IP address.</li>
+            <li><strong>Message Constraints:</strong> Maximum message length of 2048 characters (optimized for E2EE payloads) and a limit of 5 URLs per message.</li>
+            <li><strong>Identity Management:</strong> Usernames are limited to 15 characters, with a maximum of 5 change attempts per session to prevent identity-shifting spam.</li>
+            <li><strong>Rate Limiting:</strong> Adaptive rate limiting with a burst capacity of 6 messages and a sustained rate of 2 messages per second.</li>
+            <li><strong>Spam Protection:</strong> Heuristic analysis to detect duplicate messages, repetitive character patterns, and command flooding.</li>
+            <li><strong>Temporary Muting:</strong> Automated 30-second mute for users who exceed strike thresholds for spam or flood violations.</li>
+        </ul>
+
         <h2>Security Standards Compliance</h2>
         <ul>
             <li><strong>Web Crypto API:</strong> Utilizes native, high-performance cryptographic primitives provided by the browser.</li>
@@ -137,7 +150,7 @@
         </ul>
 
         <div class="footer">
-            Generated on April 28, 2026
+            Generated on April 30, 2026
         </div>
     </div>
 </body>

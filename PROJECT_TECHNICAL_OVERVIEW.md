@@ -50,10 +50,21 @@ The server acts purely as a blind relay for encrypted payloads.
 - **No Persistence:** Messages are broadcast to active participants in the room via WebSockets and are never written to a database or disk.
 - **Logging:** Only high-level events (e.g., user joins, admin actions) are logged; no message content or sensitive identifiers are captured.
 
+## System Limits & Anti-Spam
+To ensure platform stability and prevent abuse, several server-side limits are enforced:
+- **Global Capacity:** Maximum of 20 concurrent users across the entire platform.
+- **Room Capacity:** Maximum of 20 concurrent users per chat room.
+- **Connection Limit:** Maximum of 3 concurrent WebSocket connections per IP address.
+- **Message Constraints:** Maximum message length of 2048 characters (optimized for E2EE payloads) and a limit of 5 URLs per message.
+- **Identity Management:** Usernames are limited to 15 characters, with a maximum of 5 change attempts per session to prevent identity-shifting spam.
+- **Rate Limiting:** Adaptive rate limiting with a burst capacity of 6 messages and a sustained rate of 2 messages per second.
+- **Spam Protection:** Heuristic analysis to detect duplicate messages, repetitive character patterns, and command flooding.
+- **Temporary Muting:** Automated 30-second mute for users who exceed strike thresholds for spam or flood violations.
+
 ## Security Standards Compliance
 - **Web Crypto API:** Utilizes native, high-performance cryptographic primitives provided by the browser.
 - **Modern Algorithms:** Employs AES-GCM 256 and PBKDF2-HMAC-SHA256, both of which are currently considered secure and industry-standard.
 - **Secure Key Generation:** Uses cryptographically secure PRNGs for all random values (Keys and IVs).
 
 ---
-*Generated on April 28, 2026*
+*Generated on April 30, 2026*

@@ -11,6 +11,8 @@
 - **Privacy by Design:** No registration, no cookies, no analytics, and no fingerprinting.
 - **Room Isolation:** Messages are scoped to 64-character Room IDs. Only users with the same Room ID and Encryption Key can communicate.
 
+For a detailed deep-dive into the security architecture and system limits, see the [Technical Project Overview & E2EE Implementation](PROJECT_TECHNICAL_OVERVIEW.md).
+
 ## Features
 
 - **Anonymous Identities:** No sign-up required. Choose a nickname or change it anytime.
