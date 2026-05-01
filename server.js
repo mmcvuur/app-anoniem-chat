@@ -174,12 +174,19 @@ const ROOM_COLORS = [
 
 function getRoomColor(roomId) {
   if (!roomId) return '#ffffff';
+  // Use a more robust hash of the 64-char hex string
   let hash = 0;
   for (let i = 0; i < roomId.length; i++) {
-    hash = roomId.charCodeAt(i) + ((hash << 5) - hash);
+    const char = roomId.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash |= 0; // Convert to 32bit integer
   }
+  // Further scramble to avoid patterns in hex strings
+  hash = (hash ^ (hash >>> 16));
   const index = Math.abs(hash) % ROOM_COLORS.length;
-  return ROOM_COLORS[index];
+  const color = ROOM_COLORS[index];
+  logger.debug({ event: 'get_room_color', roomId: roomId.slice(0, 8), index, color }, 'Room color assigned');
+  return color;
 }
 
 const URL_REGEX = /(https?:\/\/[^\s]+)/gi;
