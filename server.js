@@ -162,14 +162,14 @@ const recentMessages = [];
 const MAX_RECENT_MSGS = 20;
 
 const ROOM_COLORS = [
-  '#e74c3c', // irc-red
-  '#2ecc71', // irc-green
-  '#3498db', // irc-blue
-  '#f1c40f', // irc-yellow
-  '#9b59b6', // irc-purple
-  '#1abc9c', // irc-cyan
-  '#e67e22', // irc-orange
-  '#ff9ff3', // irc-pink
+  '#c0392b', // Dark Red
+  '#27ae60', // Dark Green
+  '#2980b9', // Dark Blue
+  '#8e44ad', // Dark Purple
+  '#16a085', // Dark Cyan
+  '#d35400', // Dark Orange
+  '#2c3e50', // Midnight Blue
+  '#7f8c8d', // Dark Grey
 ];
 
 function getRoomColor(roomId) {
