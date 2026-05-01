@@ -81,8 +81,15 @@ app.get('/admin/rooms', (req, res) => {
 
   const rooms = {};
   for (const [sId, rId] of socketToRoom.entries()) {
-    if (!rooms[rId]) rooms[rId] = [];
-    rooms[rId].push(socketToUsername.get(sId));
+    if (!rooms[rId]) {
+      rooms[rId] = {
+        users: [],
+        color: getRoomColor(rId),
+        userCount: 0
+      };
+    }
+    rooms[rId].users.push(socketToUsername.get(sId));
+    rooms[rId].userCount++;
   }
 
   logger.info({ event: 'admin_rooms_list', count: Object.keys(rooms).length }, 'Admin rooms list requested');
@@ -153,6 +160,28 @@ const ipCmdCooldowns = new Map();  // IP -> { [cmdName]: timestamp }
 
 const recentMessages = [];
 const MAX_RECENT_MSGS = 20;
+
+const ROOM_COLORS = [
+  '#e74c3c', // irc-red
+  '#2ecc71', // irc-green
+  '#3498db', // irc-blue
+  '#f1c40f', // irc-yellow
+  '#9b59b6', // irc-purple
+  '#1abc9c', // irc-cyan
+  '#e67e22', // irc-orange
+  '#ff9ff3', // irc-pink
+];
+
+function getRoomColor(roomId) {
+  if (!roomId) return '#ffffff';
+  let hash = 0;
+  for (let i = 0; i < roomId.length; i++) {
+    hash = roomId.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % ROOM_COLORS.length;
+  return ROOM_COLORS[index];
+}
+
 const URL_REGEX = /(https?:\/\/[^\s]+)/gi;
 
 let MOTD = '';
@@ -537,6 +566,7 @@ io.on('connection', (socket) => {
 
     recentMessages.push({
       roomId: roomId.slice(0, 8) + '...',
+      roomColor: getRoomColor(roomId),
       username: user,
       text,
       time: payload.time
