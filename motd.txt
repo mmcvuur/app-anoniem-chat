@@ -1,3 +1,7 @@
+                     _)            
+  _` |   \   _ \   \  |  -_)  ` \  
+\__,_|_| _|\___/_| _|_|\___|_|_|_| 
+
 STATUS: [green]SECURE[/green] | [green]AES-256[/green] | [green]NO-LOGS[/green]
 -----------------------------------
  [yellow]/motd[/yellow]        : Show this message
