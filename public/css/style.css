@@ -202,15 +202,28 @@ ul {
   color: var(--text); 
 }
 
-.motd {
+#messages li.motd {
   text-align: left;
   margin: 40px auto;
-  max-width: fit-content;
+  max-width: 90%;
+  width: fit-content;
   white-space: pre-wrap;
+  overflow-wrap: break-word;
   background: rgba(255, 255, 255, 0.03);
   padding: 20px;
   border-radius: 5px;
   border: 1px solid var(--system-text);
+  box-sizing: border-box;
+  display: block; /* Ensure it respects width/margin */
+}
+
+@media (max-width: 600px) {
+  #messages li.motd {
+    margin: 20px auto;
+    padding: 15px;
+    font-size: 0.85rem;
+    max-width: 95%;
+  }
 }
 
 .irc-red { color: #e74c3c; }
