@@ -168,8 +168,8 @@ const ROOM_COLORS = [
   '#8e44ad', // Dark Purple
   '#16a085', // Dark Cyan
   '#d35400', // Dark Orange
-  '#2c3e50', // Midnight Blue
-  '#7f8c8d', // Dark Grey
+  '#f39c12', // Orange/Yellow
+  '#e84393', // Pink/Magenta
 ];
 
 function getRoomColor(roomId) {
