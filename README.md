@@ -11,6 +11,24 @@
 - **Privacy by Design:** No registration, no cookies, no analytics, and no fingerprinting.
 - **Room Isolation:** Messages are scoped to 64-character Room IDs. Only users with the same Room ID and Encryption Key can communicate.
 
+## Configuration (.env)
+
+The application can be configured using environment variables. Create a `.env` file in the root directory to customize the following:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `PORT` | The port the server listens on. | `6000` |
+| `NODE_ENV` | Environment mode (`production`, `development`). | `development` |
+| `LOG_LEVEL` | Logging level (`fatal`, `error`, `warn`, `info`, `debug`, `trace`). | `info` |
+| `MAX_GLOBAL_USERS` | Maximum number of concurrent users allowed on the server. | `20` |
+| `MAX_USERS_PER_ROOM` | Maximum number of users allowed in a single chat room. | `20` |
+| `TRUSTED_PROXY_IPS` | Comma-separated list of trusted proxy IPs for rate limiting. | `127.0.0.1, ::1` |
+| `ONLINE_TOKEN` | Token required in `x-admin-token` header to see active user list via `/online`. | *None* |
+| `ROOMS_TOKEN` | Token required in `x-admin-token` header for `/admin/rooms` and `/admin/messages`. | *None* |
+| `ANNOUNCE_TOKEN` | Token required in `x-admin-token` header for `/admin/announce`. | *None* |
+
+For a detailed deep-dive into the security architecture and system limits, see the [Technical Project Overview & E2EE Implementation](PROJECT_TECHNICAL_OVERVIEW.md).
+
 ## Features
 
 - **Anonymous Identities:** No sign-up required. Choose a nickname or change it anytime.
@@ -43,8 +61,8 @@
    ```bash
    npm install
    ```
-3. Configure environment variables (optional):
-   - Copy `.env` if provided or create one with `MAX_GLOBAL_USERS`, `ONLINE_TOKEN`, etc.
+3. Configure environment variables:
+   Create a `.env` file based on the [Configuration](#configuration-env) section.
 4. Start the server:
    ```bash
    # Using the start script (requires zsh)
