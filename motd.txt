@@ -1,10 +1,1 @@
 STATUS: [green]SECURE[/green] | [green]AES-256[/green] | [green]NO-LOGS[/green]
------------------------------------
- [yellow]/motd[/yellow]        : Show this message
- [yellow]/nick[/yellow] <name> : Change handle
- [yellow]/me[/yellow] <action> : Perform action
- [yellow]/id[/yellow]          : Show your ID
- [yellow]/who[/yellow]         : Who is here
- [yellow]/clear[/yellow]       : Clear chat
- [yellow]/exit[/yellow]        : Leave session
------------------------------------
