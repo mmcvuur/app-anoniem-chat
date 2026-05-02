@@ -407,10 +407,10 @@ io.on('connection', (socket) => {
   logger.info({ event: 'connection', ip, socketId: socket.id }, 'Client connected');
 
   sendNtfy(
-    `🌐 New Connection\n📍 IP: ${ip}\n👥 Total Sockets: ${io.engine.clientsCount}\n👤 Joined Users: ${socketToUsername.size}\n🏠 Active Rooms: ${roomToUsernames.size}`,
+    `Anoniem Connection\nIP: ${ip}\nTotal Sockets: ${io.engine.clientsCount}\nJoined Users: ${socketToUsername.size}\nActive Rooms: ${roomToUsernames.size}`,
     { 
       title: 'New Connection', 
-      tags: 'incoming_envelope,globe_with_meridians',
+      tags: 'incoming_envelope',
       priority: 'low'
     }
   );
