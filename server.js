@@ -328,14 +328,16 @@ function sendNtfy(message, { title, tags, priority, click } = {}) {
   const topic = process.env.NTFY_TOPIC || 'mmcnet-anoniem';
   if (!topic) return;
 
+  const sanitizeHeader = (str) => str ? str.replace(/[^\x00-\x7F]/g, '') : undefined;
+
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'text/plain',
-      ...(title && { 'Title': title }),
-      ...(tags && { 'Tags': tags }),
-      ...(priority && { 'Priority': priority }),
-      ...(click && { 'Click': click }),
+      ...(title && { 'Title': sanitizeHeader(title) }),
+      ...(tags && { 'Tags': sanitizeHeader(tags) }),
+      ...(priority && { 'Priority': sanitizeHeader(priority) }),
+      ...(click && { 'Click': sanitizeHeader(click) }),
     }
   };
 
@@ -405,9 +407,9 @@ io.on('connection', (socket) => {
   logger.info({ event: 'connection', ip, socketId: socket.id }, 'Client connected');
 
   sendNtfy(
-    `📍 IP: ${ip}\n👥 Total Sockets: ${io.engine.clientsCount}\n👤 Joined Users: ${socketToUsername.size}\n🏠 Active Rooms: ${roomToUsernames.size}`,
+    `🌐 New Connection\n📍 IP: ${ip}\n👥 Total Sockets: ${io.engine.clientsCount}\n👤 Joined Users: ${socketToUsername.size}\n🏠 Active Rooms: ${roomToUsernames.size}`,
     { 
-      title: '🌐 New Connection', 
+      title: 'New Connection', 
       tags: 'incoming_envelope,globe_with_meridians',
       priority: 'low'
     }
