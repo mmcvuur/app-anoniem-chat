@@ -17,6 +17,7 @@ const logger = pino({
 
 const ROOT = __dirname;
 const motdPath = path.join(ROOT, 'motd.txt');
+const helpPath = path.join(ROOT, 'help.txt');
 const publicPath = path.join(ROOT, 'public');
 
 const app = express();
@@ -215,7 +216,9 @@ function getRoomColor(roomId) {
 const URL_REGEX = /(https?:\/\/[^\s]+)/gi;
 
 let MOTD = '';
+let HELP = '';
 let motdWatcher = null;
+let helpWatcher = null;
 
 async function loadMotd() {
   try {
@@ -227,9 +230,24 @@ async function loadMotd() {
   }
 }
 
+async function loadHelp() {
+  try {
+    HELP = await fsp.readFile(helpPath, 'utf8');
+    logger.info({ event: 'help_reload', length: HELP.length }, 'HELP reloaded');
+  } catch (err) {
+    logger.warn({ event: 'help_reload_failed', error: err.message }, 'HELP failed to load');
+    HELP = '';
+  }
+}
+
 function closeMotdWatcher() {
   try { motdWatcher?.close?.(); } catch {}
   motdWatcher = null;
+}
+
+function closeHelpWatcher() {
+  try { helpWatcher?.close?.(); } catch {}
+  helpWatcher = null;
 }
 
 function startMotdWatcher() {
@@ -247,9 +265,25 @@ function startMotdWatcher() {
   }
 }
 
+function startHelpWatcher() {
+  closeHelpWatcher();
+  try {
+    helpWatcher = fs.watch(helpPath, { persistent: false }, async (event) => {
+      logger.info({ event: 'help_watch_trigger', action: event }, 'HELP file change detected');
+      if (event === 'change' || event === 'rename') {
+        await loadHelp();
+        if (event === 'rename') setImmediate(startHelpWatcher);
+      }
+    });
+  } catch {
+    helpWatcher = null;
+  }
+}
+
 (async () => {
-  await loadMotd();
+  await Promise.all([loadMotd(), loadHelp()]);
   startMotdWatcher();
+  startHelpWatcher();
 })();
 
 function getTimestamp() {
@@ -532,7 +566,7 @@ io.on('connection', (socket) => {
   });
 
   onCmd('help', () => {
-    socket.emit('chat message', { type: 'motd', text: MOTD || 'No MOTD set' });
+    socket.emit('chat message', { type: 'motd', text: HELP || 'No help text set' });
   });
 
   onCmd('clear chat', () => {
