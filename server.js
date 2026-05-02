@@ -476,8 +476,8 @@ io.on('connection', (socket) => {
       sendNtfy(
         `${cleaned}\n${ip}\nTotal Sockets: ${io.engine.clientsCount}\nJoined Users: ${socketToUsername.size}\nActive Rooms: ${roomToUsernames.size}`,
         { 
-          title: 'Anoniem Chat', 
-          tags: 'incoming_envelope,bust_in_silhouette',
+          title: 'Connection', 
+          tags: 'bust_in_silhouette',
           priority: 'low'
         }
       );
