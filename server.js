@@ -325,7 +325,7 @@ function emitInfoToRoom(roomId, text) {
 }
 
 function sendNtfy(message, { title, tags, priority, click } = {}) {
-  const topic = process.env.NTFY_TOPIC || 'mmcnet-anoniem';
+  const topic = process.env.NTFY_TOPIC || 'ANONIEM-CHAT';
   if (!topic) return;
 
   const sanitizeHeader = (str) => str ? str.replace(/[^\x00-\x7F]/g, '') : undefined;
