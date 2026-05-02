@@ -407,9 +407,9 @@ io.on('connection', (socket) => {
   logger.info({ event: 'connection', ip, socketId: socket.id }, 'Client connected');
 
   sendNtfy(
-    `Anoniem Connection\nIP: ${ip}\nTotal Sockets: ${io.engine.clientsCount}\nJoined Users: ${socketToUsername.size}\nActive Rooms: ${roomToUsernames.size}`,
+    `Connection\nIP: ${ip}\nTotal Sockets: ${io.engine.clientsCount}\nJoined Users: ${socketToUsername.size}\nActive Rooms: ${roomToUsernames.size}`,
     { 
-      title: 'New Connection', 
+      title: 'Anoniem Chat', 
       tags: 'incoming_envelope',
       priority: 'low'
     }
