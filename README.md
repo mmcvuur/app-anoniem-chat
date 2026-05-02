@@ -54,6 +54,7 @@ For a detailed deep-dive into the security architecture and system limits, see t
   - `/who` — List active participants in the current room.
   - `/id` — Display your current username and room hash.
   - `/motd` — View the current Message of the Day.
+  - `/help` — Display this help information (alias for `/motd`).
   - `/clear` — Wipe the local chat history.
   - `/exit` — Disconnect and return to the login screen.
 - **PWA Support:** Installable as a mobile or desktop app for a native experience.

@@ -531,6 +531,10 @@ io.on('connection', (socket) => {
     socket.emit('chat message', { type: 'motd', text: MOTD || 'No MOTD set' });
   });
 
+  onCmd('help', () => {
+    socket.emit('chat message', { type: 'motd', text: MOTD || 'No MOTD set' });
+  });
+
   onCmd('clear chat', () => {
     socket.emit('clear chat');
     emitSystem(socket, `Chat wiped at ${getTimestamp()}`);

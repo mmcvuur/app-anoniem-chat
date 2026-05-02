@@ -466,6 +466,7 @@ function userLi(msg, decryptedText) {
 
 const COMMANDS = [
   { match: v => v === '/who' || v === '/w', run: () => socket.emit('who') },
+  { match: v => v === '/help' || v === '/h', run: () => socket.emit('help') },
   { match: v => v === '/id', run: () => socket.emit('id') },
   { match: v => v === '/motd', run: () => socket.emit('motd') },
   { match: v => v === '/clear' || v === '/c', run: () => {
