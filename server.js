@@ -1,5 +1,6 @@
 const express = require('express');
 const http = require('http');
+const https = require('https');
 const { Server } = require('socket.io');
 const fs = require('fs');
 const fsp = require('fs/promises');
@@ -113,6 +114,28 @@ app.post('/admin/announce', (req, res) => {
   if (!text || typeof text !== 'string') return res.status(400).json({ ok: false, error: 'text required' });
   io.emit('chat message', { type: 'system', text: text.trim(), time: getTimestamp() });
   logger.info({ event: 'announce', text: text.trim() }, 'Admin announcement sent');
+  res.json({ ok: true });
+});
+
+app.post('/admin/ntfy-stats', (req, res) => {
+  const token = req.headers['x-admin-token'];
+  if (!process.env.ROOMS_TOKEN || !token || token !== process.env.ROOMS_TOKEN) {
+    return res.status(403).json({ ok: false });
+  }
+
+  const stats = [
+    `👥 Total Sockets: ${io.engine.clientsCount}`,
+    `👤 Joined Users: ${socketToUsername.size}`,
+    `🏠 Active Rooms: ${roomToUsernames.size}`
+  ].join('\n');
+
+  sendNtfy(stats, { 
+    title: 'Admin Stats Summary', 
+    tags: 'bar_chart,stats',
+    priority: 'default'
+  });
+  
+  logger.info({ event: 'admin_ntfy_stats' }, 'Admin stats ntfy sent');
   res.json({ ok: true });
 });
 
@@ -301,6 +324,38 @@ function emitInfoToRoom(roomId, text) {
   io.to(roomId).emit('chat message', { type: 'info', text, time: getTimestamp() });
 }
 
+function sendNtfy(message, { title, tags, priority, click } = {}) {
+  const topic = process.env.NTFY_TOPIC || 'mmcnet-anoniem';
+  if (!topic) return;
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain',
+      ...(title && { 'Title': title }),
+      ...(tags && { 'Tags': tags }),
+      ...(priority && { 'Priority': priority }),
+      ...(click && { 'Click': click }),
+    }
+  };
+
+  const req = https.request(`https://ntfy.sh/${topic}`, options, (res) => {
+    res.on('data', () => {});
+    res.on('end', () => {
+      if (res.statusCode >= 400) {
+        logger.error({ event: 'ntfy_error', statusCode: res.statusCode }, 'ntfy request failed');
+      }
+    });
+  });
+
+  req.on('error', (err) => {
+    logger.error({ err, event: 'ntfy_error' }, 'Failed to send ntfy notification');
+  });
+
+  req.write(message);
+  req.end();
+}
+
 const RESERVED_USERNAMES = new Set(['root', 'admin', 'moderator', 'system', 'server', 'owner']);
 
 function sanitizeUsername(raw) {
@@ -348,6 +403,15 @@ io.on('connection', (socket) => {
   }
 
   logger.info({ event: 'connection', ip, socketId: socket.id }, 'Client connected');
+
+  sendNtfy(
+    `📍 IP: ${ip}\n👥 Total Sockets: ${io.engine.clientsCount}\n👤 Joined Users: ${socketToUsername.size}\n🏠 Active Rooms: ${roomToUsernames.size}`,
+    { 
+      title: '🌐 New Connection', 
+      tags: 'incoming_envelope,globe_with_meridians',
+      priority: 'low'
+    }
+  );
 
   const curr = (ipConnCounts.get(ip) || 0) + 1;
   ipConnCounts.set(ip, curr);
