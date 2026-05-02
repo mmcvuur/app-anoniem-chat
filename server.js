@@ -406,15 +406,6 @@ io.on('connection', (socket) => {
 
   logger.info({ event: 'connection', ip, socketId: socket.id }, 'Client connected');
 
-  sendNtfy(
-    `Connection\nIP: ${ip}\nTotal Sockets: ${io.engine.clientsCount}\nJoined Users: ${socketToUsername.size}\nActive Rooms: ${roomToUsernames.size}`,
-    { 
-      title: 'Anoniem Chat', 
-      tags: 'incoming_envelope',
-      priority: 'low'
-    }
-  );
-
   const curr = (ipConnCounts.get(ip) || 0) + 1;
   ipConnCounts.set(ip, curr);
   socketIp.set(socket.id, ip);
@@ -481,6 +472,15 @@ io.on('connection', (socket) => {
       logger.info({ event: 'room_join', ip, username: cleaned, roomId }, 'User joined room');
 
       socket.emit('session', { username: cleaned, id: socket.id, roomId });
+
+      sendNtfy(
+        `New Join: ${cleaned}\nIP: ${ip}\nTotal Sockets: ${io.engine.clientsCount}\nJoined Users: ${socketToUsername.size}\nActive Rooms: ${roomToUsernames.size}`,
+        { 
+          title: 'Anoniem Chat', 
+          tags: 'incoming_envelope,bust_in_silhouette',
+          priority: 'low'
+        }
+      );
 
       if (MOTD) socket.emit('chat message', { type: 'motd', text: MOTD });
       
