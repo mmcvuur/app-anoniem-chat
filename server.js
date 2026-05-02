@@ -474,7 +474,7 @@ io.on('connection', (socket) => {
       socket.emit('session', { username: cleaned, id: socket.id, roomId });
 
       sendNtfy(
-        `New Join: ${cleaned}\nIP: ${ip}\nTotal Sockets: ${io.engine.clientsCount}\nJoined Users: ${socketToUsername.size}\nActive Rooms: ${roomToUsernames.size}`,
+        `${cleaned}\n${ip}\nTotal Sockets: ${io.engine.clientsCount}\nJoined Users: ${socketToUsername.size}\nActive Rooms: ${roomToUsernames.size}`,
         { 
           title: 'Anoniem Chat', 
           tags: 'incoming_envelope,bust_in_silhouette',
