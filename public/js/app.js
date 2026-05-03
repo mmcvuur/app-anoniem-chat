@@ -24,6 +24,11 @@ const originalTitle = document.title;
 let unread = 0;
 let showRaw = false;
 
+const MAX_HISTORY = 5;
+let messageHistory = [];
+let historyIndex = -1;
+let currentInput = '';
+
 showRawToggle?.addEventListener('change', (e) => {
   showRaw = e.target.checked;
   document.querySelectorAll('.raw-payload').forEach(el => {
@@ -523,6 +528,16 @@ form.addEventListener('submit', async (e) => {
   const raw = (input.value || '').trim();
   if (!raw) return;
 
+  // History recall
+  if (messageHistory.length === 0 || messageHistory[messageHistory.length - 1] !== raw) {
+    messageHistory.push(raw);
+    if (messageHistory.length > MAX_HISTORY) {
+      messageHistory.shift();
+    }
+  }
+  historyIndex = messageHistory.length;
+  currentInput = '';
+
   for (const cmd of COMMANDS) {
     if (cmd.match(raw)) {
       cmd.run(raw);
@@ -539,6 +554,29 @@ form.addEventListener('submit', async (e) => {
     input.value = '';
   } catch (err) {
     console.error('Encryption failed', err);
+  }
+});
+
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowUp') {
+    if (historyIndex === messageHistory.length) {
+      currentInput = input.value;
+    }
+    if (historyIndex > 0) {
+      historyIndex--;
+      input.value = messageHistory[historyIndex];
+      e.preventDefault();
+    }
+  } else if (e.key === 'ArrowDown') {
+    if (historyIndex < messageHistory.length) {
+      historyIndex++;
+      if (historyIndex === messageHistory.length) {
+        input.value = currentInput;
+      } else {
+        input.value = messageHistory[historyIndex];
+      }
+      e.preventDefault();
+    }
   }
 });
 
