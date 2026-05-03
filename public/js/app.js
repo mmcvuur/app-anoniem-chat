@@ -452,7 +452,12 @@ function userLi(msg, decryptedText) {
   }
   
   content.appendChild(header);
-  content.appendChild(linkify(displayContent));
+  
+  const textSpan = document.createElement('span');
+  textSpan.className = 'message-text';
+  textSpan.appendChild(linkify(displayContent));
+  content.appendChild(textSpan);
+  
   li.appendChild(content);
 
   const img = imageify(decryptedText);

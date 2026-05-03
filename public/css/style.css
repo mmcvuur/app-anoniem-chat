@@ -357,9 +357,12 @@ ul {
   line-height: 1;
 }
 
-.user-message.large-emoji {
-  font-size: 3rem;
+.user-message.large-emoji .message-text {
+  font-size: 2.25rem;
   line-height: 1.2;
+  display: inline-block;
+  vertical-align: middle;
+  padding-top: 5px;
 }
 
 .my-message { 
