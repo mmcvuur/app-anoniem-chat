@@ -423,6 +423,10 @@ function userLi(msg, decryptedText) {
   const isAction = decryptedText.startsWith('/me ');
   const displayContent = isAction ? decryptedText.slice(4) : decryptedText;
   
+  // Regex for a single emoji (including variations/modifiers)
+  const singleEmojiRegex = /^(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])$/;
+  const isSingleEmoji = !isAction && singleEmojiRegex.test(displayContent.trim());
+
   const content = document.createElement('div');
   const header = document.createElement('span');
 
@@ -464,6 +468,7 @@ function userLi(msg, decryptedText) {
     li.classList.add('irc-yellow');
   } else {
     li.classList.add('user-message');
+    if (isSingleEmoji) li.classList.add('large-emoji');
     if (msg.username === myUsername) li.classList.add('my-message');
   }
   return li;

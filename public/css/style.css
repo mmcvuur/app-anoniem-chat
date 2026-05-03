@@ -357,6 +357,11 @@ ul {
   line-height: 1;
 }
 
+.user-message.large-emoji {
+  font-size: 3rem;
+  line-height: 1.2;
+}
+
 .my-message { 
   color: #1abc9c; 
   line-height: 1; 
