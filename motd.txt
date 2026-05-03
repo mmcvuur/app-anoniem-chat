@@ -1,2 +1,0 @@
-[white]Welcome to the room.[/white] [red]Remember to keep your room key secure,
-and if you reload this page your history will be gone.[/red]
