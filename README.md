@@ -2,8 +2,6 @@
 
 **Anoniem Chat** is a high-security, privacy-focused, and ephemeral group messaging platform. It is designed for users who require absolute anonymity with zero data retention and end-to-end encryption (E2EE).
 
-![Screenshot](screenshot.png)
-
 ## Core Pillars
 
 - **Zero Persistence:** No databases, no logs of message content, and no tracking. Everything exists only in volatile memory (RAM) and is wiped upon reload.
