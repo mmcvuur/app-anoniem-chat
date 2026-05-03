@@ -1,1 +1,2 @@
-STATUS: [green]SECURE[/green] | [green]AES-256[/green] | [green]NO-LOGS[/green]
+[white]Welcome to the room.[/white] [red]Remember to keep your room key secure,
+and if you reload this page your history will be gone.[/red]

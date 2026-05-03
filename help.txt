@@ -1,9 +1,4 @@
-[b]Welcome to Anoniem Chat[/b]
-
-This is a high-security, privacy-focused messaging platform.
-All messages are [b]end-to-end encrypted[/b] in your browser.
-
-[b]Commands:[/b]
+[b]Commands[/b]
 /nick <name>  - Change your display name
 /me <action>  - Perform an action
 /who          - See who is in the room
@@ -12,7 +7,3 @@ All messages are [b]end-to-end encrypted[/b] in your browser.
 /help         - Show this help text
 /clear        - Clear your local chat history
 /exit         - Leave the chat
-
-[b]Privacy Note:[/b]
-Nothing is stored on the server. Refreshing or exiting wipes everything.
-To talk with others, share your [b]Room Key[/b] securely.
