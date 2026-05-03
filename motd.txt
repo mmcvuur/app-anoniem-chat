@@ -1,2 +1,1 @@
 STATUS: [green]SECURE[/green] | [green]AES-256[/green] | [green]NO-LOGS[/green]
-/help for commands
