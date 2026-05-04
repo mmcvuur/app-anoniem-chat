@@ -43,6 +43,30 @@ let encryptionKey = null;
 const storedUsername = localStorage.getItem('chatUsername');
 if (storedUsername) joinUsername.value = storedUsername;
 
+function processUrlParams() {
+  const hash = window.location.hash.substring(1);
+  if (!hash) return;
+
+  const params = new URLSearchParams(hash);
+  const key = params.get('key');
+  
+  if (key) {
+    joinKey.value = key;
+    const username = joinUsername.value.trim();
+    
+    // If we have both, auto-join
+    if (username && key.length >= 32) {
+      console.log('Auto-joining room from URL parameters');
+      joinRoom(username, key);
+    }
+  }
+}
+
+// Process URL params after a short delay to ensure DOM and logic are ready
+window.addEventListener('load', () => {
+  setTimeout(processUrlParams, 500);
+});
+
 const socket = io({
   path: '/socket.io',
   transports: ['websocket', 'polling'],
@@ -358,11 +382,7 @@ genKeyBtn.addEventListener('click', () => {
   }
 });
 
-joinForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const username = joinUsername.value.trim();
-  const key = joinKey.value;
-  
+async function joinRoom(username, key) {
   if (!username) return;
   if (!key || key.length < 32) {
     joinError.textContent = 'Room Key must be at least 32 characters.';
@@ -387,7 +407,6 @@ joinForm.addEventListener('submit', async (e) => {
     } else {
       console.log('Socket not connected, calling socket.connect()');
       socket.connect();
-      // Global connect listener will handle the join
     }
 
     // Timeout if joining takes too long
@@ -402,6 +421,11 @@ joinForm.addEventListener('submit', async (e) => {
     joinError.textContent = 'Error initializing encryption';
     console.error('Crypto error:', err);
   }
+}
+
+joinForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  joinRoom(joinUsername.value.trim(), joinKey.value);
 });
 
 socket.on('join rejected', ({ reason }) => {
