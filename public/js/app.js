@@ -215,6 +215,55 @@ function youtubeify(text) {
   return container;
 }
 
+function pdfify(text) {
+  const pdfRegex = /((?:https?:\/\/|www\.)[^\s<]+\.pdf(?:[?#][^\s<]*)?)/gi;
+  const match = pdfRegex.exec(text);
+  if (!match) return null;
+
+  let url = match[1];
+  if (url.toLowerCase().startsWith('www.')) url = 'http://' + url;
+
+  // Extract filename from URL
+  let fileName = 'Document.pdf';
+  try {
+    const urlObj = new URL(url.startsWith('http') ? url : 'http://' + url);
+    const path = urlObj.pathname;
+    const parts = path.split('/');
+    const lastPart = parts[parts.length - 1];
+    if (lastPart && lastPart.toLowerCase().endsWith('.pdf')) {
+      fileName = decodeURIComponent(lastPart);
+    }
+  } catch (e) {}
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.className = 'pdf-preview';
+
+  const icon = document.createElement('div');
+  icon.className = 'pdf-icon';
+  icon.innerHTML = '<i class="fa-solid fa-file-pdf"></i>';
+
+  const info = document.createElement('div');
+  info.className = 'pdf-info';
+
+  const name = document.createElement('div');
+  name.className = 'pdf-name';
+  name.textContent = fileName;
+
+  const meta = document.createElement('div');
+  meta.className = 'pdf-meta';
+  meta.textContent = 'PDF Document';
+
+  info.appendChild(name);
+  info.appendChild(meta);
+  a.appendChild(icon);
+  a.appendChild(info);
+
+  return a;
+}
+
 toggleKey.addEventListener('click', () => {
   const type = joinKey.type === 'password' ? 'text' : 'password';
   joinKey.type = type;
@@ -461,6 +510,9 @@ function systemLi(text, className) {
   const yt = youtubeify(text);
   if (yt) li.appendChild(yt);
 
+  const pdf = pdfify(text);
+  if (pdf) li.appendChild(pdf);
+
   if (className) li.classList.add(className);
   return li;
 }
@@ -512,6 +564,9 @@ function userLi(msg, decryptedText) {
 
   const yt = youtubeify(decryptedText);
   if (yt) li.appendChild(yt);
+
+  const pdf = pdfify(decryptedText);
+  if (pdf) li.appendChild(pdf);
 
   const raw = document.createElement('div');
   raw.className = 'raw-payload';

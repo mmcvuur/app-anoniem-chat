@@ -318,6 +318,53 @@ ul {
   border-color: white;
 }
 
+.pdf-preview {
+  display: flex;
+  align-items: center;
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin-top: 10px;
+  max-width: 350px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  text-decoration: none !important;
+  color: #e0e0e0 !important;
+}
+
+.pdf-preview:hover {
+  background: #333;
+  border-color: #3498db;
+}
+
+.pdf-icon {
+  font-size: 28px;
+  color: #e74c3c;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.pdf-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pdf-name {
+  font-weight: 600;
+  font-size: 0.9em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdf-meta {
+  font-size: 0.75em;
+  color: #888;
+  margin-top: 2px;
+}
+
 /* Lightbox Modal */
 #image-modal {
   display: none;
