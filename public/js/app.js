@@ -314,6 +314,25 @@ function twitterify(text) {
   a.appendChild(avatar);
   a.appendChild(info);
 
+  // Asynchronously fetch tweet content
+  fetch(`https://api.vxtwitter.com/Twitter/status/${tweetId}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.text) {
+        content.textContent = data.text;
+      }
+      if (data.user_name) {
+        user.textContent = `${data.user_name} (@${data.user_screen_name})`;
+      }
+      // Update avatar if we got a better one
+      if (data.user_profile_image_url) {
+        avatar.src = data.user_profile_image_url;
+      }
+    })
+    .catch(() => {
+      // Keep default text on error
+    });
+
   return a;
 }
 
