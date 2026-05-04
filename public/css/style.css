@@ -365,6 +365,78 @@ ul {
   margin-top: 2px;
 }
 
+.twitter-preview {
+  display: flex;
+  align-items: center;
+  background: #15202b;
+  border: 1px solid #38444d;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 10px;
+  max-width: 400px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  text-decoration: none !important;
+  color: #ffffff !important;
+}
+
+.twitter-preview:hover {
+  background: #192734;
+  border-color: #1da1f2;
+}
+
+.twitter-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+  background: #253341;
+  border: 1px solid #38444d;
+}
+
+.twitter-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.twitter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.twitter-user {
+  font-weight: 700;
+  font-size: 0.95em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.twitter-handle {
+  color: #8899a6;
+  font-size: 0.85em;
+  font-weight: 400;
+}
+
+.twitter-content {
+  font-size: 0.9em;
+  color: #fff;
+  margin-top: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.twitter-icon {
+  color: #1da1f2;
+  font-size: 1.2em;
+}
+
 /* Lightbox Modal */
 #image-modal {
   display: none;

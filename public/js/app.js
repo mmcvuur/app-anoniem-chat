@@ -264,6 +264,59 @@ function pdfify(text) {
   return a;
 }
 
+function twitterify(text) {
+  const twitterRegex = /((?:https?:\/\/|www\.)(?:twitter\.com|x\.com)\/([a-zA-Z0-9_]+)\/status\/(\d+)[^\s<]*)/gi;
+  const match = twitterRegex.exec(text);
+  if (!match) return null;
+
+  const fullUrl = match[1];
+  const username = match[2];
+  const tweetId = match[3];
+  
+  let href = fullUrl;
+  if (href.toLowerCase().startsWith('www.')) href = 'http://' + href;
+
+  const a = document.createElement('a');
+  a.href = href;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.className = 'twitter-preview';
+
+  const avatar = document.createElement('img');
+  avatar.className = 'twitter-avatar';
+  avatar.src = `https://unavatar.io/twitter/${username}`;
+  avatar.alt = username;
+  avatar.onerror = () => { avatar.src = 'https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png'; };
+
+  const info = document.createElement('div');
+  info.className = 'twitter-info';
+
+  const header = document.createElement('div');
+  header.className = 'twitter-header';
+
+  const user = document.createElement('div');
+  user.className = 'twitter-user';
+  user.textContent = `@${username}`;
+
+  const icon = document.createElement('div');
+  icon.className = 'twitter-icon';
+  icon.innerHTML = '<i class="fa-brands fa-x-twitter"></i>';
+
+  header.appendChild(user);
+  header.appendChild(icon);
+
+  const content = document.createElement('div');
+  content.className = 'twitter-content';
+  content.textContent = `View tweet on X (ID: ${tweetId})`;
+
+  info.appendChild(header);
+  info.appendChild(content);
+  a.appendChild(avatar);
+  a.appendChild(info);
+
+  return a;
+}
+
 toggleKey.addEventListener('click', () => {
   const type = joinKey.type === 'password' ? 'text' : 'password';
   joinKey.type = type;
@@ -513,6 +566,9 @@ function systemLi(text, className) {
   const pdf = pdfify(text);
   if (pdf) li.appendChild(pdf);
 
+  const tw = twitterify(text);
+  if (tw) li.appendChild(tw);
+
   if (className) li.classList.add(className);
   return li;
 }
@@ -567,6 +623,9 @@ function userLi(msg, decryptedText) {
 
   const pdf = pdfify(decryptedText);
   if (pdf) li.appendChild(pdf);
+
+  const tw = twitterify(decryptedText);
+  if (tw) li.appendChild(tw);
 
   const raw = document.createElement('div');
   raw.className = 'raw-payload';
