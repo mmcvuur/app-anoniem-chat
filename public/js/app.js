@@ -171,6 +171,50 @@ function imageify(text) {
   return container;
 }
 
+function youtubeify(text) {
+  // Regex to find YouTube URLs and capture the ID
+  const ytRegex = /((?:https?:\/\/|www\.)(?:(?:www\.|m\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})[^\s<]*)/gi;
+  const match = ytRegex.exec(text);
+  if (!match) return null;
+
+  const fullUrl = match[1];
+  const videoId = match[2];
+  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+  
+  let href = fullUrl;
+  if (href.toLowerCase().startsWith('www.')) href = 'http://' + href;
+
+  const container = document.createElement('div');
+  container.className = 'chat-image-container youtube-preview';
+
+  const a = document.createElement('a');
+  a.href = href;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.style.display = 'block';
+
+  const img = document.createElement('img');
+  img.src = thumbnailUrl;
+  img.className = 'chat-thumb';
+  img.loading = 'lazy';
+  img.alt = 'YouTube video thumbnail';
+  
+  img.onload = () => {
+    if (SCROLL_ON_APPEND) {
+      messages.scrollTop = messages.scrollHeight;
+    }
+  };
+
+  const playOverlay = document.createElement('div');
+  playOverlay.className = 'youtube-play-overlay';
+  playOverlay.innerHTML = '<i class="fa-solid fa-play"></i>';
+
+  a.appendChild(img);
+  a.appendChild(playOverlay);
+  container.appendChild(a);
+  return container;
+}
+
 toggleKey.addEventListener('click', () => {
   const type = joinKey.type === 'password' ? 'text' : 'password';
   joinKey.type = type;
@@ -414,6 +458,9 @@ function systemLi(text, className) {
   const img = imageify(text);
   if (img) li.appendChild(img);
 
+  const yt = youtubeify(text);
+  if (yt) li.appendChild(yt);
+
   if (className) li.classList.add(className);
   return li;
 }
@@ -462,6 +509,9 @@ function userLi(msg, decryptedText) {
 
   const img = imageify(decryptedText);
   if (img) li.appendChild(img);
+
+  const yt = youtubeify(decryptedText);
+  if (yt) li.appendChild(yt);
 
   const raw = document.createElement('div');
   raw.className = 'raw-payload';
