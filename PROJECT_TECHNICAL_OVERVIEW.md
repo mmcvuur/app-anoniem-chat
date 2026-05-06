@@ -8,6 +8,8 @@ Anoniem Chat is a privacy-focused, anonymous, and ephemeral group messaging plat
 - **Ephemeral Messaging:** Chat history exists only in the browser's memory and is cleared upon page reload.
 - **Anonymity:** No tracking cookies, analytics, or fingerprinting.
 - **End-to-End Encryption (E2EE):** All messages are encrypted in the sender's browser and decrypted only by the intended recipients.
+- **Rich Media Previews:** Secure, client-side previews for YouTube videos, PDF documents, and Twitter/X posts.
+- **Direct Room Joining:** Secure URL-based room joining via client-side fragments.
 
 ---
 
@@ -44,6 +46,22 @@ When a client receives an encrypted message:
 
 ---
 
+## Rich Media & Link Previews
+To enhance the user experience without compromising privacy, the application includes secure, client-side preview mechanisms:
+
+- **YouTube Previews:** Automatically detects YouTube URLs and displays a thumbnail preview with a play button overlay. Links directly to the video.
+- **PDF Previews:** Identifies PDF document links and displays a document preview card showing the filename and file type.
+- **Twitter/X Previews:** Recognizes posts from Twitter/X and fetches live post content and author metadata via a public, privacy-preserving API (vxtwitter).
+- **Security:** Previews are generated entirely in the client's browser. No URL data is sent to the Anoniem server for preview generation.
+
+## Secure Room Joining
+The platform supports a secure method for sharing room access via URLs:
+- **Implementation:** Uses URL Fragments (`#`) to store room keys (e.g., `https://anoniem.chat/#key=...`).
+- **Security Advantage:** Unlike query parameters (`?`), URL fragments are **never sent to the server** in the HTTP request. This prevents the room key from appearing in server logs, proxy logs, or browser history, maintaining the zero-knowledge nature of the platform.
+- **Auto-Join:** If a valid key is present in the fragment and a username is already saved in the browser's local storage, the user is joined to the room automatically.
+
+---
+
 ## Server-Side Privacy
 The server acts purely as a blind relay for encrypted payloads.
 - **Zero Visibility:** The server receives only the Base64-encoded ciphertext. It has no access to the encryption keys or the plaintext.
@@ -67,4 +85,4 @@ To ensure platform stability and prevent abuse, several server-side limits are e
 - **Secure Key Generation:** Uses cryptographically secure PRNGs for all random values (Keys and IVs).
 
 ---
-*Generated on April 30, 2026*
+*Updated on May 3, 2026*
