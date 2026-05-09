@@ -359,6 +359,9 @@ function emitInfoToRoom(roomId, text) {
 }
 
 function sendNtfy(message, { title, tags, priority, click } = {}) {
+  const enabled = process.env.NTFY_ENABLED === 'true';
+  if (!enabled) return;
+
   const topic = process.env.NTFY_TOPIC || 'ANONIEM-CHAT';
   if (!topic) return;
 
