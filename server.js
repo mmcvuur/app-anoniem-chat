@@ -441,7 +441,7 @@ io.on('connection', (socket) => {
     return;
   }
 
-  logger.info({ event: 'connection', ip, socketId: socket.id }, 'Client connected');
+  logger.info({ event: 'connection', socketId: socket.id }, 'Client connected');
 
   const curr = (ipConnCounts.get(ip) || 0) + 1;
   ipConnCounts.set(ip, curr);
@@ -506,12 +506,12 @@ io.on('connection', (socket) => {
       socketToRoom.set(socket.id, roomId);
       socket.join(roomId);
 
-      logger.info({ event: 'room_join', ip, username: cleaned, roomId }, 'User joined room');
+      logger.info({ event: 'room_join', username: cleaned, roomId }, 'User joined room');
 
       socket.emit('session', { username: cleaned, id: socket.id, roomId });
 
       sendNtfy(
-        `${cleaned}\n${ip}\nTotal Sockets: ${io.engine.clientsCount}\nJoined Users: ${socketToUsername.size}\nActive Rooms: ${roomToUsernames.size}`,
+        `${cleaned}\nTotal Sockets: ${io.engine.clientsCount}\nJoined Users: ${socketToUsername.size}\nActive Rooms: ${roomToUsernames.size}`,
         { 
           title: 'Connection', 
           tags: 'bust_in_silhouette',
@@ -619,7 +619,7 @@ io.on('connection', (socket) => {
     socket.emit('nickname updated', cleaned);
     socket.emit('session', { username: cleaned, id: socket.id, roomId });
     emitInfoToRoom(roomId, `${oldName} is now known as ${cleaned}`);
-    logger.info({ event: 'nickname_change', ip, oldName, newName: cleaned, roomId });
+    logger.info({ event: 'nickname_change', oldName, newName: cleaned, roomId });
   });
 
   socket.on('chat message', (msg) => {
@@ -738,7 +738,7 @@ io.on('connection', (socket) => {
       else ipConnCounts.delete(ip);
     }
 
-    logger.info({ event: 'disconnect', username: name, roomId, ip, reason }, 'Client disconnected');
+    logger.info({ event: 'disconnect', username: name, roomId, reason }, 'Client disconnected');
   });
 });
 
