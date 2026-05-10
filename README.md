@@ -19,8 +19,9 @@
 ## System Limits
 
 To ensure stability and prevent abuse, the following limits are enforced:
-- **Global Capacity:** Max 20 concurrent users server-wide.
-- **Room Capacity:** Max 20 concurrent users per room.
+- **Global Capacity:** Max 100 concurrent users server-wide.
+- **Room Capacity:** Max 10 concurrent users per room.
+- **Room Limit:** Max 10 concurrent active rooms.
 - **Connections:** Max 3 concurrent WebSocket connections per IP.
 - **Messages:** Max 2048 characters per message.
 - **Rate Limiting:** Adaptive throttling with an automated strike system for spam.
@@ -34,8 +35,9 @@ The application can be configured using environment variables. Create a `.env` f
 | `PORT` | The port the server listens on. | `6000` |
 | `NODE_ENV` | Environment mode (`production`, `development`). | `development` |
 | `LOG_LEVEL` | Logging level (`fatal`, `error`, `warn`, `info`, `debug`, `trace`). | `info` |
-| `MAX_GLOBAL_USERS` | Maximum number of concurrent users allowed on the server. | `20` |
-| `MAX_USERS_PER_ROOM` | Maximum number of users allowed in a single chat room. | `20` |
+| `MAX_GLOBAL_USERS` | Maximum number of concurrent users allowed on the server. | `100` |
+| `MAX_USERS_PER_ROOM` | Maximum number of users allowed in a single chat room. | `10` |
+| `MAX_ROOMS` | Maximum number of concurrent active rooms allowed. | `10` |
 | `TRUSTED_PROXY_IPS` | Comma-separated list of trusted proxy IPs for rate limiting. | `127.0.0.1, ::1` |
 | `ONLINE_TOKEN` | Token required in `x-admin-token` header to see active user list via `/online`. | *None* |
 | `ROOMS_TOKEN` | Token required in `x-admin-token` header for `/admin/rooms` and `/admin/messages`. | *None* |

@@ -95,7 +95,7 @@ app.get('/admin/rooms', (req, res) => {
   }
 
   logger.info({ event: 'admin_rooms_list', count: Object.keys(rooms).length }, 'Admin rooms list requested');
-  res.json({ ok: true, rooms, maxGlobalUsers: MAX_GLOBAL_USERS, maxUsersPerRoom: MAX_USERS_PER_ROOM });
+  res.json({ ok: true, rooms, maxGlobalUsers: MAX_GLOBAL_USERS, maxUsersPerRoom: MAX_USERS_PER_ROOM, maxRooms: MAX_ROOMS });
 });
 
 app.get('/admin/messages', (req, res) => {
@@ -144,8 +144,9 @@ app.use((req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));
 });
 
-const MAX_USERS_PER_ROOM        = parseInt(process.env.MAX_USERS_PER_ROOM) || 20;
-const MAX_GLOBAL_USERS          = parseInt(process.env.MAX_GLOBAL_USERS) || 20;
+const MAX_USERS_PER_ROOM        = parseInt(process.env.MAX_USERS_PER_ROOM) || 10;
+const MAX_GLOBAL_USERS          = parseInt(process.env.MAX_GLOBAL_USERS) || 100;
+const MAX_ROOMS                 = parseInt(process.env.MAX_ROOMS) || 10;
 const MAX_CONNECTIONS_PER_IP    = 3;
 const MAX_MSG_LENGTH            = 2048; // Increased for encrypted payloads
 const URL_LIMIT_PER_MSG         = 5;
@@ -498,6 +499,10 @@ io.on('connection', (socket) => {
 
       const lower = cleaned.toLowerCase();
       if (!roomToUsernames.has(roomId)) {
+        if (roomToUsernames.size >= MAX_ROOMS) {
+          socket.emit('join rejected', { reason: 'Maximum room capacity reached' });
+          return;
+        }
         roomToUsernames.set(roomId, new Set());
       }
       roomToUsernames.get(roomId).add(lower);

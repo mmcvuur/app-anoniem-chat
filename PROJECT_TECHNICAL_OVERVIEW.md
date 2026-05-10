@@ -70,8 +70,9 @@ The server acts purely as a blind relay for encrypted payloads.
 
 ## System Limits & Anti-Spam
 To ensure platform stability and prevent abuse, several server-side limits are enforced:
-- **Global Capacity:** Maximum of 20 concurrent users across the entire platform.
-- **Room Capacity:** Maximum of 20 concurrent users per chat room.
+- **Global Capacity:** Maximum of 100 concurrent users across the entire platform.
+- **Room Capacity:** Maximum of 10 concurrent users per chat room.
+- **Room Limit:** Maximum of 10 concurrent active rooms.
 - **Connection Limit:** Maximum of 3 concurrent WebSocket connections per IP address.
 - **Message Constraints:** Maximum message length of 2048 characters (optimized for E2EE payloads) and a limit of 5 URLs per message.
 - **Identity Management:** Usernames are limited to 15 characters, with a maximum of 5 change attempts per session to prevent identity-shifting spam.
