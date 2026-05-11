@@ -32,7 +32,25 @@ const io = new Server(server, {
   path: '/socket.io',
 });
 
-app.set('trust proxy', 'loopback');
+app.set('trust proxy', (ip) => {
+  if (ip === 'loopback' || ip === '127.0.0.1' || ip === '::1') return true;
+  return TRUSTED_PROXY_IPS.has(normalizeIp(ip));
+});
+
+// Rate limiting for HTTP endpoints
+const httpRateLimiters = new Map();
+function httpRateLimit(req, res, next) {
+  const ip = req.ip || 'unknown';
+  if (!httpRateLimiters.has(ip)) {
+    httpRateLimiters.set(ip, new TokenBucket(2, 10)); // 2 req/sec, burst of 10
+  }
+  if (httpRateLimiters.get(ip).take(1)) {
+    next();
+  } else {
+    logger.warn({ event: 'http_rate_limit', ip, path: req.path }, 'HTTP rate limit exceeded');
+    res.status(429).json({ error: 'Too many requests' });
+  }
+}
 
 app.use(compression({
   threshold: 1024,
@@ -46,17 +64,27 @@ app.use(express.json());
 app.use((req, res, next) => {
   res.setHeader('Content-Security-Policy', [
     "default-src 'self'",
-    "script-src 'self' https://cdn.socket.io https://cdn.jsdelivr.net",
+    "script-src 'self' https://cdn.socket.io",
     "connect-src 'self' https: wss:",
-    "img-src 'self' http: https: data:",
+    "img-src 'self' https: data:",
     "style-src 'self'",
     "font-src 'self'",
     "media-src 'self'",
     "object-src 'none'",
-    "base-uri 'none'"
+    "base-uri 'none'",
+    "form-action 'self'",
+    "frame-ancestors 'none'"
   ].join('; '));
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '0');
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=(), payment=()');
+  
+  if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  }
+  
   next();
 });
 
@@ -67,7 +95,7 @@ app.use((req, _res, next) => {
 
 app.use(express.static(publicPath));
 
-app.get('/online', (req, res) => {
+app.get('/online', httpRateLimit, (req, res) => {
   const users = Array.from(socketToUsername.values());
   const count = users.length;
   const token = req.headers['x-admin-token'];
@@ -75,7 +103,7 @@ app.get('/online', (req, res) => {
   res.json(allowList ? { count, users } : { count });
 });
 
-app.get('/admin/rooms', (req, res) => {
+app.get('/admin/rooms', httpRateLimit, (req, res) => {
   const token = req.headers['x-admin-token'];
   if (!process.env.ROOMS_TOKEN || !token || token !== process.env.ROOMS_TOKEN) {
     return res.status(403).json({ ok: false });
@@ -98,7 +126,7 @@ app.get('/admin/rooms', (req, res) => {
   res.json({ ok: true, rooms, maxGlobalUsers: MAX_GLOBAL_USERS, maxUsersPerRoom: MAX_USERS_PER_ROOM, maxRooms: MAX_ROOMS });
 });
 
-app.get('/admin/messages', (req, res) => {
+app.get('/admin/messages', httpRateLimit, (req, res) => {
   const token = req.headers['x-admin-token'];
   if (!process.env.ROOMS_TOKEN || !token || token !== process.env.ROOMS_TOKEN) {
     return res.status(403).json({ ok: false });
@@ -106,7 +134,7 @@ app.get('/admin/messages', (req, res) => {
   res.json({ ok: true, messages: recentMessages });
 });
 
-app.post('/admin/announce', (req, res) => {
+app.post('/admin/announce', httpRateLimit, (req, res) => {
   const token = req.headers['x-admin-token'];
   const { text } = req.body || {};
   if (!process.env.ANNOUNCE_TOKEN || !token || token !== process.env.ANNOUNCE_TOKEN) {
@@ -118,7 +146,7 @@ app.post('/admin/announce', (req, res) => {
   res.json({ ok: true });
 });
 
-app.post('/admin/ntfy-stats', (req, res) => {
+app.post('/admin/ntfy-stats', httpRateLimit, (req, res) => {
   const token = req.headers['x-admin-token'];
   if (!process.env.ROOMS_TOKEN || !token || token !== process.env.ROOMS_TOKEN) {
     return res.status(403).json({ ok: false });
