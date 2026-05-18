@@ -47,8 +47,14 @@ function processUrlParams() {
   const hash = window.location.hash.substring(1);
   if (!hash) return;
 
-  const params = new URLSearchParams(hash);
-  const key = params.get('key');
+  let key = null;
+  if (hash.startsWith('key=')) {
+    const params = new URLSearchParams(hash);
+    key = params.get('key');
+  } else if (hash.length >= 40) {
+    // If it's a long string without key=, assume it's the key itself
+    key = hash;
+  }
   
   if (key) {
     joinKey.value = key;
@@ -66,6 +72,9 @@ function processUrlParams() {
 window.addEventListener('load', () => {
   setTimeout(processUrlParams, 500);
 });
+
+// Also process when hash changes without reload
+window.addEventListener('hashchange', processUrlParams);
 
 const socket = io({
   path: '/socket.io',
