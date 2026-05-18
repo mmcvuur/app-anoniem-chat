@@ -55,7 +55,7 @@ function processUrlParams() {
     const username = joinUsername.value.trim();
     
     // If we have both, auto-join
-    if (username && key.length >= 32) {
+    if (username && key.length >= 40) {
       console.log('Auto-joining room from URL parameters');
       joinRoom(username, key);
     }
@@ -143,7 +143,7 @@ async function decryptMessage(combinedBase64, key) {
 }
 
 function generateRandomKey() {
-  const array = new Uint8Array(32);
+  const array = new Uint8Array(20);
   crypto.getRandomValues(array);
   return Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('');
 }
