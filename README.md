@@ -7,7 +7,7 @@
 - **Zero Persistence:** No databases, no logs of message content, and no tracking. Everything exists only in volatile memory (RAM) and is wiped upon reload.
 - **End-to-End Encryption (E2EE):** All messages are encrypted in the browser using **AES-GCM 256** before being sent to the server. The server acts as a blind relay and never has access to encryption keys or plaintext.
 - **Privacy by Design:** No registration, no cookies, no analytics, and no fingerprinting.
-- **Room Isolation:** Messages are scoped to 64-character Room IDs. Only users with the same Room ID and Encryption Key can communicate.
+- **Room Isolation:** Messages are scoped to 40-character hexadecimal Room Keys. Only users with the same Room Key can communicate.
 
 ## How it Works
 
