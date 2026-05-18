@@ -143,14 +143,9 @@ async function decryptMessage(combinedBase64, key) {
 }
 
 function generateRandomKey() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
-  const array = new Uint32Array(32);
+  const array = new Uint8Array(32);
   crypto.getRandomValues(array);
-  let result = '';
-  for (let i = 0; i < 32; i++) {
-    result += chars.charAt(array[i] % chars.length);
-  }
-  return result;
+  return Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 // UI Actions

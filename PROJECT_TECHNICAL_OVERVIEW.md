@@ -19,7 +19,7 @@ The E2EE implementation in Anoniem Chat follows modern cryptographic standards u
 ### 1. Key Generation
 Users can manually enter an encryption key or generate a cryptographically secure random key directly in the browser. 
 - **Method:** `window.crypto.getRandomValues()`
-- **Key Length:** 32 characters (alphanumeric and special symbols).
+- **Key Length:** 64 characters (hexadecimal).
 - **Security:** The key never leaves the user's browser.
 
 ### 2. Key Derivation (PBKDF2)
