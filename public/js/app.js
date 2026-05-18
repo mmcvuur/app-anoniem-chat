@@ -379,8 +379,8 @@ genKeyBtn.addEventListener('click', () => {
 
 async function joinRoom(username, key) {
   if (!username) return;
-  if (!key || key.length < 32) {
-    joinError.textContent = 'Room Key must be at least 32 characters.';
+  if (!key || key.length < 40) {
+    joinError.textContent = 'Room Key must be at least 40 characters.';
     return;
   }
   
